@@ -1,7 +1,5 @@
-import fs from 'fs';
-import { stringify } from 'csv-stringify/sync';
 import { program } from 'commander';
-
+import { jsonl2csv } from './jsonl2csv';
 
 const main = (): void => {
   // コマンドラインオプションを解析
@@ -20,17 +18,7 @@ const main = (): void => {
   // フィールドの並び順を取得
   const fields = options.fields || [];
 
-  // JSON Linesファイルを行ごとに読み込む
-  const lines = fs.readFileSync(jsonlFilePath, 'utf-8').split('\n').filter(Boolean);
-
-  // 各行をJSONオブジェクトにパースする
-  const jsonObjects = lines.map(line => JSON.parse(line));
-
-  // JSONオブジェクトの配列をCSV形式の文字列に変換する
-  const result = stringify(jsonObjects, {columns: fields, header: true});
-
-  // 変換結果をファイルに出力する
-  fs.writeFileSync(csvFilePath, result);
+  jsonl2csv(jsonlFilePath, csvFilePath, fields);
 };
 
 main();
